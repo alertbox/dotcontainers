@@ -1,0 +1,33 @@
+{
+  "id": "aws-sam-cli",
+  "name": "AWS Serverless CLI (SAM)",
+  "version": "1.0.0",
+  "description": "Installs CLI tool to build, test, debug, and deploy Serverless applications using AWS SAM.",
+  "options": {
+    "version": {
+      "type": "string",
+      "proposals": [
+        "latest"
+      ],
+      "default": "latest",
+      "description": "Select or enter a version."
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "AmazonWebServices.amazon-q-vscode",
+        "4ops.terraform"
+      ],
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+        "aws.telemetry": false,
+        "amazonQ.telemetry": false,
+        "aws.samcli.enableCodeLenses": true
+      }
+    }
+  },
+  "dependsOn": {
+    "ghcr.io/devcontainers/features/aws-cli": {}
+  }
+}

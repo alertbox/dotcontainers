@@ -1,0 +1,16 @@
+{
+  "id": "npm-install",
+  "name": "Node packages install",
+  "version": "1.0.0",
+  "description": "Install node packages and binaries system-wide along with needed dependencies.",
+  "options": {
+    "packages": {
+      "type": "string",
+      "default": "",
+      "description": "Comma separated list of packages to install in system-wide."
+    }
+  },
+  "dependsOn": {
+    "ghcr.io/devcontainers/features/node": {}
+  }
+}
