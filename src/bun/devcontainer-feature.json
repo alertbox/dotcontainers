@@ -1,0 +1,29 @@
+{
+  "id": "bun",
+  "name": "Bun",
+  "version": "1.0.0",
+  "description": "Installs Bun, an all-in-one toolkit for JavaScript and TypeScript apps",
+  "options": {
+    "version": {
+      "type": "string",
+      "proposals": [
+        "latest"
+      ],
+      "default": "latest",
+      "description": "Select or enter a version."
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "oven.bun-vscode"
+      ],
+      // Set *default* container specific settings.json values on container create.
+      "settings": {
+      }
+    }
+  },
+  "dependsOn": {
+    "ghcr.io/devcontainers/features/common-utils": {}
+  }
+}
