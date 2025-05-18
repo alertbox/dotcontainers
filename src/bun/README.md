@@ -7,7 +7,7 @@ Install the Bun toolkit
 
 ```json
 "features": {
-    "ghcr.io/alertbox/devcontainer-features/bun:1": {}
+    "ghcr.io/alertbox/devcontainer-features/bun:2": {}
 }
 ```
 

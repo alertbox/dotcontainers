@@ -1,7 +1,7 @@
 {
   "id": "bun",
   "name": "Bun",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "Installs Bun, an all-in-one toolkit for JavaScript and TypeScript apps",
   "options": {
     "version": {
