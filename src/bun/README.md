@@ -16,6 +16,7 @@ Install the Bun toolkit
 | Options Id | Description | Type | Default Value |
 |-----|-----|-----|-----|
 | version | Version of the Bun CLI to install (or "latest") | string | latest |
+| packages | Optional comma separated list of packages to install globally. | string | - |
 
 ---
 
