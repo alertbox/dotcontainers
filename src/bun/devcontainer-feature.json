@@ -11,7 +11,12 @@
       ],
       "default": "latest",
       "description": "Select or enter a version."
-    }
+    },
+    "packages": {
+      "type": "string",
+      "default": "",
+      "description": "Optional comma separated list of packages to install globally."
+    },
   },
   "customizations": {
     "vscode": {

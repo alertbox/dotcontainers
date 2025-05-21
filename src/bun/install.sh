@@ -2,37 +2,46 @@
 
 set -e
 
+# Clean up.
+rm -rf /var/lib/apt/lists/*
+
 # This script installs Bun, a fast all-in-one JavaScript runtime.
-# Source: https://github.com/oven-sh/bun/tree/main/dockerhub
+# Source: https://bun.sh/install
+#         https://github.com/oven-sh/bun/tree/main/dockerhub
 
 # https://github.com/oven-sh/bun/releases
 BUN_VERSION=${VERSION:-"latest"}
+# https://bun.sh/docs/cli/add
+BUN_PACKAGES=${PACKAGES}
 
-echo "Activating feature 'bun@${BUN_VERSION}'"
+echo "Activating feature 'bun'"
 
 # The 'install.sh' entrypoint script is always executed as the root user.
-apt_get_update() {
-    echo "Running apt-get update..."
-    apt-get update -qq
-}
+#
+# These following environment variables are passed in by the dev container CLI.
+# These may be useful in instances where the context of the final
+# remoteUser or containerUser is useful.
+# For more details, see https://containers.dev/implementors/features#user-env-var
+
+export DEBIAN_FRONTEND=noninteractive
 
 # Checks if packages are installed and installs them if not
 check_packages() {
     if ! dpkg -s "$@" > /dev/null 2>&1; then
         if [ "$(find /var/lib/apt/lists/* | wc -l)" = "0" ]; then
-            apt_get_update
+            echo "Running apt-get update..."
+            apt-get update -qq
         fi
         apt-get -qq install --no-install-recommends "$@"
 
         apt-get clean
-        rm -rf /var/lib/apt/lists/*
     fi
 }
 
-export DEBIAN_FRONTEND=noninteractive
-
 check_packages ca-certificates curl dirmngr gpg gpg-agent unzip
 
+command -v unzip >/dev/null ||
+    (echo "error: unzip is required to install bun" && exit 1)
 
 arch="$(dpkg --print-architecture)"
 case "${arch##*-}" in
@@ -41,10 +50,11 @@ case "${arch##*-}" in
     *) echo "error: unsupported architecture: $arch"; exit 1 ;;
 esac
 
-case "$BUN_VERSION" in
-    latest | canary | bun-v*) tag="$BUN_VERSION"; ;;
-    v*)                       tag="bun-$BUN_VERSION"; ;;
-    *)                        tag="bun-v$BUN_VERSION"; ;;
+version="$BUN_VERSION"
+case "$version" in
+    latest | canary | bun-v*) tag="$version"; ;;
+    v*)                       tag="bun-$version"; ;;
+    *)                        tag="bun-v$version"; ;;
 esac
 
 case "$tag" in
@@ -52,30 +62,74 @@ case "$tag" in
     *)      release="download/$tag"; ;;
 esac
 
-echo "(*) Installing Bun..."
+# Ensure `bun install -g` works
+install_env=BUN_INSTALL
+bin_env=\$$install_env/bin
 
-curl -fsSLO --compressed --retry 5 "https://github.com/oven-sh/bun/releases/$release/bun-linux-$build.zip" \
-    || (echo "error: failed to download: $tag" && exit 1)
+install_dir=${!install_env:-${_REMOTE_USER_HOME}/.bun}
+bin_dir=$install_dir/bin
+exe_name=bun
+exe=$bin_dir/$exe_name
 
-for key in "F3DCC08A8572C0749B3E18888EAB4D40A7B22B59"; do
-    gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys "$key" || gpg --batch --keyserver keyserver.ubuntu.com --recv-keys "$key" ;
+echo "Installing Bun ($build)..."
+
+curl "https://github.com/oven-sh/bun/releases/$release/bun-linux-$build.zip" -fsSLO --compressed --retry 5 ||
+      (echo "error: failed to download: $tag" && exit 1)
+
+unzip "bun-linux-$build.zip" ||
+    (echo "error: failed to unzip bun." && exit 1)
+
+if [[ ! -d $bin_dir ]]; then
+    mkdir -p "$bin_dir" ||
+        (echo "error: failed to create install directory \"$bin_dir\"." && exit 1)
+fi
+mv "bun-linux-$build/$exe_name" $exe ||
+    (echo "error: failed to move extracted bun to destination." && exit 1)
+
+chmod +x $exe ||
+    (echo "error: failed to set permission on bun executable." && exit 1)
+
+commands=(
+    "export $install_env=\"$install_dir\""
+    "export PATH=\"$bin_env:\$PATH\""
+)
+
+bash_configs=(
+    "${_REMOTE_USER_HOME}/.bashrc"
+    "${_REMOTE_USER_HOME}/.bash_profile"
+)
+
+if [[ ${XDG_CONFIG_HOME:-} ]]; then
+    bash_configs+=(
+        "$XDG_CONFIG_HOME/.bash_profile"
+        "$XDG_CONFIG_HOME/.bashrc"
+        "$XDG_CONFIG_HOME/bash_profile"
+        "$XDG_CONFIG_HOME/bashrc"
+    )
+fi
+
+for bash_config in "${bash_configs[@]}"; do
+    if [[ -w $bash_config ]]; then
+        {
+            echo -e '\n# bun'
+            for command in "${commands[@]}"; do
+                echo "$command"
+            done
+        } >> "$bash_config"
+        break
+    fi
 done
 
-curl -fsSLO --compressed --retry 5 "https://github.com/oven-sh/bun/releases/$release/SHASUMS256.txt.asc"
-gpg --batch --decrypt --output SHASUMS256.txt SHASUMS256.txt.asc || (echo "error: failed to verify: $tag" && exit 1)
-grep " bun-linux-$build.zip\$" SHASUMS256.txt | sha256sum -c - || (echo "error: failed to verify: $tag" && exit 1)
+# If packages are requested, loop through and install
+if [ ${#BUN_PACKAGES[@]} -gt 0 ]; then
+    packages=(`echo ${BUN_PACKAGES} | tr ',' ' '`)
+    for i in "${packages[@]}"
+    do
+        echo "Installing package ${i}"
+        su ${_REMOTE_USER} -c "$exe add --global ${i}" || continue
+    done
+fi
 
-# Ensure `bun install -g` works
-unzip "bun-linux-$build.zip"
-mv "bun-linux-$build/bun" /usr/local/bin/bun
-rm -f "bun-linux-$build.zip" SHASUMS256.txt.asc SHASUMS256.txt
-chmod +x /usr/local/bin/bun
-which bun && bun --version
-
-# Create a symlink:
-ln -s /usr/local/bin/bun /usr/local/bin/bunx
-which bunx
-mkdir -p /usr/local/bun-node-fallback-bin
-ln -s /usr/local/bin/bun /usr/local/bun-node-fallback-bin/nodebun
+rm -rf "bun-linux-$build.zip"
 
 echo "Done!"
