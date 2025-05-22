@@ -1,10 +1,9 @@
-name: "Release dev container features"
+name: "Release"
 on:
   workflow_dispatch:
   push:
     branches:
       - main
-
 jobs:
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -12,13 +11,15 @@ jobs:
     permissions:
       packages: write
       contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
-      - name: "Publish"
-        uses: devcontainers/action@v1
+      - uses: devcontainers/action@v1
         with:
           publish-features: "true"
           base-path-to-features: "./src"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          generate-docs: "true"
+          disable-repo-tagging: "true"
+        # env:
+        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
