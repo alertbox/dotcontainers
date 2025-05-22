@@ -11,15 +11,14 @@ jobs:
     permissions:
       packages: write
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v4
 
-      - uses: devcontainers/action@v1
+      - name: Publish Features
+        uses: devcontainers/action@v1
         with:
           publish-features: "true"
           base-path-to-features: "./src"
-          generate-docs: "true"
           disable-repo-tagging: "true"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
