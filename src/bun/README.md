@@ -1,13 +1,13 @@
 
 # Bun
 
-Install the Bun toolkit
+Install Bun executable.
 
 ## Example Usage
 
 ```json
 "features": {
-    "ghcr.io/alertbox/devcontainer-features/bun:2": {}
+    "ghcr.io/alertbox/dotdev/bun:0": {}
 }
 ```
 
@@ -20,4 +20,4 @@ Install the Bun toolkit
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/alertbox/devcontainer-features/blob/main/src/bun/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_[!Note]: This file was auto-generated from the [devcontainer-feature.json](https://github.com/alertbox/devcontainer-features/blob/main/src/bun/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
