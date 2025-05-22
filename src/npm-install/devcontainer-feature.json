@@ -1,7 +1,7 @@
 {
   "id": "npm-install",
   "name": "Node packages install",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Install node packages and binaries system-wide along with needed dependencies.",
   "options": {
     "packages": {
