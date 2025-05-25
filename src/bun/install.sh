@@ -2,7 +2,7 @@
 
 # The 'install.sh' entrypoint script is always executed as the root user.
 #
-# This script installs Bun, a fast all-in-one JavaScript runtime.
+# This script installs Bun CLI.
 # Source: https://bun.sh/install
 #         https://github.com/oven-sh/bun/tree/main/dockerhub
 
@@ -38,7 +38,7 @@ ARCH="$(dpkg --print-architecture)"
 case "${ARCH##*-}" in
     amd64) BUILD="x64-baseline";;
     arm64) BUILD="aarch64";;
-    *) echo "error: unsupported architecture: $ARCH"; exit 1 ;;
+    *)     echo "error: unsupported architecture: $ARCH"; exit 1 ;;
 esac
 
 case "${VERSION}" in
@@ -52,29 +52,26 @@ case "${TAG}" in
     *)      RELEASE="download/${TAG}"; ;;
 esac
 
-# Ensure `bun install -g` works
 INSTALL_ENV="BUN_INSTALL"
 BIN_ENV="\$${INSTALL_ENV}/bin"
 
 INSTALL_DIR="${!INSTALL_ENV:-${_REMOTE_USER_HOME}/.bun}"
 BIN_DIR="${INSTALL_DIR}/bin"
-EXE_NAME="bun"
-EXE="${BIN_DIR}/${EXE_NAME}"
-ARCHIVE_NAME="bun-linux-${BUILD}.zip"
+EXE="${BIN_DIR}/bun"
+ZIP="bun-linux-${BUILD}.zip"
 
-echo "Installing bun (${BUILD})..."
-
-curl "https://github.com/oven-sh/bun/releases/${RELEASE}/${ARCHIVE_NAME}" -fsSLO --compressed --retry 5 ||
+curl "https://github.com/oven-sh/bun/releases/${RELEASE}/${ZIP}" -fsSLO --compressed --retry 5 ||
       (echo "error: failed to download: ${TAG}" && exit 1)
 
-unzip "$ARCHIVE_NAME" ||
-    (echo "error: failed to unzip ${ARCHIVE_NAME}." && exit 1)
+unzip $ZIP ||
+    (echo "error: failed to unzip ${ZIP}." && exit 1)
 
 if [[ ! -d $BIN_DIR ]]; then
-    mkdir -p "$BIN_DIR" ||
+    mkdir -p $BIN_DIR ||
         (echo "error: failed to create install directory ${BIN_DIR}." && exit 1)
 fi
-mv "bun-linux-${BUILD}/${EXE_NAME}" $EXE ||
+
+mv "bun-linux-${BUILD}/bun" $EXE ||
     (echo "error: failed to move extracted bun to destination." && exit 1)
 
 chmod +x $EXE ||
@@ -111,16 +108,12 @@ for bash_config in "${bash_configs[@]}"; do
     fi
 done
 
-# If packages are requested, loop through and install
-if [ ${#BUN_PACKAGES[@]} -gt 0 ]; then
-    packages=(`echo ${BUN_PACKAGES} | tr ',' ' '`)
-    for i in "${packages[@]}"
-    do
-        echo "Installing package ${i}"
-        su ${_REMOTE_USER} -c "$EXE add --global ${i}" || continue
-    done
+# If packages are requested, install globally.
+# Ensure `bun install -g` works.
+if [ ${#PACKAGES[@]} -gt 0 ]; then
+    su ${_REMOTE_USER} -c "$EXE add --global $PACKAGES"
 fi
 
-rm -rf "$ARCHIVE_NAME"
+rm -rf $ZIP
 
 echo "Done!"
