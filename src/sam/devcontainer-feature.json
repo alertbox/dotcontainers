@@ -22,7 +22,12 @@
             "settings": {
                 "aws.telemetry": false,
                 "amazonQ.telemetry": false,
-                "aws.samcli.enableCodeLenses": true
+                "aws.samcli.enableCodeLenses": true,
+                "github.copilot.chat.codeGeneration.instructions": [
+                    {
+                        "text": "This dev container includes `sam` pre-installed and available on the `PATH` for SAM CLI, AWS Serverless Application development."
+                    }
+                ]
             }
         }
     },

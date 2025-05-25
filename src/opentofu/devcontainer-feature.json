@@ -18,6 +18,14 @@
       "extensions": [
         "4ops.terraform"
       ],
+      "settings": {
+        "github.copilot.chat.codeGeneration.instructions": [
+            {
+                "text": "This dev container includes `tofu` pre-installed and available on the `PATH` for OpenTofu, Terraform and infrastructure as code development."
+            }
+        ]
+    }
+
     }
   },
   "dependsOn": {

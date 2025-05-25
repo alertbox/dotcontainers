@@ -23,6 +23,13 @@
             "extensions": [
                 "oven.bun-vscode"
             ],
+            "settings": {
+                "github.copilot.chat.codeGeneration.instructions": [
+                    {
+                        "text": "This dev container includes `bun` and `bunx` pre-installed and available on the `PATH` for Bun.js, JavaScript and Typescript development."
+                    }
+                ]
+            }
         }
     },
     "dependsOn": {
