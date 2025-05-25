@@ -1,34 +1,31 @@
 {
-  "id": "bun",
-  "name": "Bun",
-  "version": "0.1.0",
-  "description": "Installs Bun, an all-in-one toolkit for JavaScript and TypeScript apps",
-  "options": {
-    "version": {
-      "type": "string",
-      "proposals": [
-        "latest"
-      ],
-      "default": "latest",
-      "description": "Select or enter a version."
+    "id": "bun",
+    "name": "Bun CLI",
+    "version": "0.1.0",
+    "description": "Install Bun CLI, an all-in-one toolkit for JavaScript and TypeScript apps.",
+    "options": {
+        "version": {
+            "type": "string",
+            "proposals": [
+                "latest"
+            ],
+            "default": "latest",
+            "description": "Select or enter a version."
+        },
+        "packages": {
+            "type": "string",
+            "default": "",
+            "description": "Optional comma separated list of Node.js-compatible packages to install system-wide."
+        },
     },
-    "packages": {
-      "type": "string",
-      "default": "",
-      "description": "Optional comma separated list of packages to install globally."
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "oven.bun-vscode"
+            ],
+        }
     },
-  },
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "oven.bun-vscode"
-      ],
-      // Set *default* container specific settings.json values on container create.
-      "settings": {
-      }
+    "dependsOn": {
+        "ghcr.io/devcontainers/features/common-utils": {}
     }
-  },
-  "dependsOn": {
-    "ghcr.io/devcontainers/features/common-utils": {}
-  }
 }
