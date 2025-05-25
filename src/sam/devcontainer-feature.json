@@ -3,6 +3,7 @@
     "name": "AWS Serverless Application Model",
     "version": "0.1.0",
     "description": "Install CLI tool to build, test, debug, and deploy Serverless applications using AWS SAM.",
+    "documentationURL": "https://github.com/alertbox/dotcontainers/tree/main/src/sam",
     "options": {
         "version": {
             "type": "string",

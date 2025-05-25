@@ -3,6 +3,7 @@
     "name": "Bun CLI",
     "version": "0.1.0",
     "description": "Install Bun CLI, an all-in-one toolkit for JavaScript and TypeScript apps.",
+    "documentationURL": "https://github.com/alertbox/dotcontainers/tree/main/src/bun",
     "options": {
         "version": {
             "type": "string",
