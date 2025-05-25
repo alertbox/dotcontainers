@@ -8,10 +8,11 @@ on:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    environment: documentation
+    # environment: documentation
     permissions:
       contents: write
       pull-requests: write
+
     if: "github.ref == 'refs/heads/main'"
     steps:
       - uses: actions/checkout@v4
