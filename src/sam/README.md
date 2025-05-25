@@ -1,13 +1,13 @@
 
-# AWS Serverless CLI (SAM) (aws-sam-cli)
+# AWS Serverless Application Model (sam)
 
-Installs CLI tool to build, test, debug, and deploy Serverless applications using AWS SAM.
+Install CLI tool to build, test, debug, and deploy Serverless applications using AWS SAM.
 
 ## Example Usage
 
 ```json
 "features": {
-    "ghcr.io/alertbox/dotdev/aws-sam-cli:1": {}
+    "ghcr.io/alertbox/dotcontainers/sam:0": {}
 }
 ```
 
@@ -22,10 +22,9 @@ Installs CLI tool to build, test, debug, and deploy Serverless applications usin
 ### VS Code Extensions
 
 - `AmazonWebServices.amazon-q-vscode`
-- `4ops.terraform`
 
 
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/alertbox/dotdev/blob/main/src/aws-sam-cli/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/alertbox/dotcontainers/blob/main/src/sam/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._

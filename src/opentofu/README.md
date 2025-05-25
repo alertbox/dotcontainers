@@ -7,7 +7,7 @@ Installs CLI tool for building, changing, and versioning infrastructure safely a
 
 ```json
 "features": {
-    "ghcr.io/alertbox/dotdev/opentofu:0": {}
+    "ghcr.io/alertbox/dotcontainers/opentofu:0": {}
 }
 ```
 
@@ -27,4 +27,4 @@ Installs CLI tool for building, changing, and versioning infrastructure safely a
 
 ---
 
-_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/alertbox/dotdev/blob/main/src/opentofu/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
+_Note: This file was auto-generated from the [devcontainer-feature.json](https://github.com/alertbox/dotcontainers/blob/main/src/opentofu/devcontainer-feature.json).  Add additional notes to a `NOTES.md`._
